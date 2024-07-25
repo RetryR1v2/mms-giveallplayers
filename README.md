@@ -18,7 +18,7 @@
 # Required
 
 vorp_core
-
+Feather-Menu
 
 # CREDITS
 - Discord: https://discord.gg/Hua9DFXZYN
