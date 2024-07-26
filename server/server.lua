@@ -25,6 +25,8 @@ local function CheckVersion()
             versionCheckPrint('error', ('Current Version: %s'):format(currentVersion))
             versionCheckPrint('success', ('Latest Version: %s'):format(text))
             versionCheckPrint('error', ('You are currently running an outdated version, please update to version %s'):format(text))
+            versionCheckPrint('success', 'Changelog:')
+            versionCheckPrint('success', 'Fixed Security Issues.')
         end
     end)
 end
