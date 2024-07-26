@@ -48,29 +48,33 @@ RegisterServerEvent('mms-giveallplayers:client:GiveAllPlayersEvent',function(Che
     local SrcCharacter = VORPcore.getUser(src).getUsedCharacter
     local Srcfirstname = SrcCharacter.firstname
     local Srclastname = SrcCharacter.lastname
+    local SrcGroup = SrcCharacter.group
     local InputAmountNumber = tonumber(InputAmount)
-    if CheckboxItem then
-        for _, player in ipairs(GetPlayers()) do
-            if #GetPlayers() ~= nil then
-            local Character = VORPcore.getUser(player).getUsedCharacter
-            local charidentifier = Character.charIdentifier
-                if charidentifier ~= nil then
-                    local CanCarry = exports.vorp_inventory:canCarryItem(src, InputItemName, InputAmountNumber)
-                    if CanCarry then
-                        exports.vorp_inventory:addItem(player, InputItemName, InputAmountNumber, nil, nil)
-                        VORPcore.NotifyTip(player,_U('YouGotAnItem') .. InputAmountNumber .. ' ' .. InputItemName .. _U('GivenFrom') .. Srcfirstname .. ' ' .. Srclastname,"right",10000)
+    -- Check if Admin Runs this
+    if SrcGroup == Config.AdminGroup then
+        if CheckboxItem then
+            for _, player in ipairs(GetPlayers()) do
+                if #GetPlayers() ~= nil then
+                    local Character = VORPcore.getUser(player).getUsedCharacter
+                    local charidentifier = Character.charIdentifier
+                    if charidentifier ~= nil then
+                        local CanCarry = exports.vorp_inventory:canCarryItem(src, InputItemName, InputAmountNumber)
+                        if CanCarry then
+                            exports.vorp_inventory:addItem(player, InputItemName, InputAmountNumber, nil, nil)
+                            VORPcore.NotifyTip(player,_U('YouGotAnItem') .. InputAmountNumber .. ' ' .. InputItemName .. _U('GivenFrom') .. Srcfirstname .. ' ' .. Srclastname,"right",10000)
+                        end
                     end
                 end
             end
-        end
-    elseif CheckboxMoney then
-        for _, player in ipairs(GetPlayers()) do
-            if #GetPlayers() ~= nil then
-            local Character = VORPcore.getUser(player).getUsedCharacter
-            local charidentifier = Character.charIdentifier
-                if charidentifier ~= nil then
-                    Character.addCurrency(0, InputAmountNumber)
-                    VORPcore.NotifyTip(player,_U('YouGotAnItem') .. InputAmountNumber .. _U('DollaGivenFrom') .. Srcfirstname .. ' ' .. Srclastname,"right",10000)
+        elseif CheckboxMoney then
+            for _, player in ipairs(GetPlayers()) do
+                if #GetPlayers() ~= nil then
+                local Character = VORPcore.getUser(player).getUsedCharacter
+                local charidentifier = Character.charIdentifier
+                   if charidentifier ~= nil then
+                        Character.addCurrency(0, InputAmountNumber)
+                        VORPcore.NotifyTip(player,_U('YouGotAnItem') .. InputAmountNumber .. _U('DollaGivenFrom') .. Srcfirstname .. ' ' .. Srclastname,"right",10000)
+                    end
                 end
             end
         end
