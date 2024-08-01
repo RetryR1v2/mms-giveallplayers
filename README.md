@@ -10,6 +10,9 @@
 
 - 1.1.0 Initial Release Version
 - 1.1.1 Fixed Security Issue
+- 1.1.2 Added WebHook
+- Added Give Weapon
+- Added Remove Money or Item
 
 # installation 
 

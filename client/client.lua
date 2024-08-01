@@ -94,6 +94,21 @@ Citizen.CreateThread(function()
         CheckboxItem = data.value
     end)
     GiveAllMenuPage1:RegisterElement("checkbox", {
+        label = _U('RemoveItem'),
+        start = false,
+        sound = {
+            action = "SELECT",
+            soundset = "RDRO_Character_Creator_Sounds"
+        },
+        style = {
+            ['background-color'] = '#FF8C00',
+            ['color'] = 'orange',
+            ['border-radius'] = '6px'
+        }
+    }, function(data)
+        CheckboxRemoveItem = data.value
+    end)
+    GiveAllMenuPage1:RegisterElement("checkbox", {
         label = _U('Money'),
         start = false,
         sound = {
@@ -107,6 +122,36 @@ Citizen.CreateThread(function()
         }
     }, function(data)
         CheckboxMoney = data.value
+    end)
+    GiveAllMenuPage1:RegisterElement("checkbox", {
+        label = _U('RemoveMoney'),
+        start = false,
+        sound = {
+            action = "SELECT",
+            soundset = "RDRO_Character_Creator_Sounds"
+        },
+        style = {
+            ['background-color'] = '#FF8C00',
+            ['color'] = 'orange',
+            ['border-radius'] = '6px'
+        }
+    }, function(data)
+        CheckboxRemoveMoney = data.value
+    end)
+    GiveAllMenuPage1:RegisterElement("checkbox", {
+        label = _U('Weapon'),
+        start = false,
+        sound = {
+            action = "SELECT",
+            soundset = "RDRO_Character_Creator_Sounds"
+        },
+        style = {
+            ['background-color'] = '#FF8C00',
+            ['color'] = 'orange',
+            ['border-radius'] = '6px'
+        }
+    }, function(data)
+        CheckboxWeapon = data.value
     end)
     local InputItemName = ''
     GiveAllMenuPage1:RegisterElement('input', {
@@ -134,6 +179,19 @@ Citizen.CreateThread(function()
     }, function(data)
         InputAmount = data.value
     end)
+    local InputWeapon = ''
+    GiveAllMenuPage1:RegisterElement('input', {
+        label = _U('WeaponHash'),
+        placeholder = _U('WeaponExample'),
+        persist = false,
+        style = {
+            ['background-color'] = '#FF8C00',
+            ['color'] = 'orange',
+            ['border-radius'] = '6px'
+    }
+    }, function(data)
+        InputWeapon = data.value
+    end)
     GiveAllMenuPage1:RegisterElement('button', {
         label = _U('GiveAllButton'),
         style = {
@@ -142,7 +200,7 @@ Citizen.CreateThread(function()
             ['border-radius'] = '6px'
         },
     }, function()
-        TriggerEvent('mms-giveallplayers:client:GiveAllPlayersEvent',CheckboxItem,CheckboxMoney,InputItemName,InputAmount)
+        TriggerEvent('mms-giveallplayers:client:GiveAllPlayersEvent',CheckboxItem,CheckboxRemoveItem,CheckboxMoney,CheckboxRemoveMoney,CheckboxWeapon,InputItemName,InputAmount,InputWeapon)
     end)
     GiveAllMenuPage1:RegisterElement('button', {
         label =  _U('CloseMenu'),
@@ -173,6 +231,6 @@ Citizen.CreateThread(function()
 end)
 
 RegisterNetEvent('mms-giveallplayers:client:GiveAllPlayersEvent')
-AddEventHandler('mms-giveallplayers:client:GiveAllPlayersEvent',function (CheckboxItem,CheckboxMoney,InputItemName,InputAmount)
-    TriggerServerEvent('mms-giveallplayers:client:GiveAllPlayersEvent',CheckboxItem,CheckboxMoney,InputItemName,InputAmount)
+AddEventHandler('mms-giveallplayers:client:GiveAllPlayersEvent',function (CheckboxItem,CheckboxRemoveItem,CheckboxMoney,CheckboxRemoveMoney,CheckboxWeapon,InputItemName,InputAmount,InputWeapon)
+    TriggerServerEvent('mms-giveallplayers:client:GiveAllPlayersEvent',CheckboxItem,CheckboxRemoveItem,CheckboxMoney,CheckboxRemoveMoney,CheckboxWeapon,InputItemName,InputAmount,InputWeapon)
 end)

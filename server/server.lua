@@ -43,25 +43,48 @@ end)
 
 --- Give All Players
 
-RegisterServerEvent('mms-giveallplayers:client:GiveAllPlayersEvent',function(CheckboxItem,CheckboxMoney,InputItemName,InputAmount)
+RegisterServerEvent('mms-giveallplayers:client:GiveAllPlayersEvent',function(CheckboxItem,CheckboxRemoveItem,CheckboxMoney,CheckboxRemoveMoney,CheckboxWeapon,InputItemName,InputAmount,InputWeapon)
     local src = source
     local SrcCharacter = VORPcore.getUser(src).getUsedCharacter
     local Srcfirstname = SrcCharacter.firstname
     local Srclastname = SrcCharacter.lastname
     local SrcGroup = SrcCharacter.group
     local InputAmountNumber = tonumber(InputAmount)
-    -- Check if Admin Runs this
     if SrcGroup == Config.AdminGroup then
         if CheckboxItem then
             for _, player in ipairs(GetPlayers()) do
                 if #GetPlayers() ~= nil then
                     local Character = VORPcore.getUser(player).getUsedCharacter
                     local charidentifier = Character.charIdentifier
+                    local PlayerFirstname = Character.firstname
+                    local PlayerLastname = Character.lastname
                     if charidentifier ~= nil then
                         local CanCarry = exports.vorp_inventory:canCarryItem(src, InputItemName, InputAmountNumber)
                         if CanCarry then
                             exports.vorp_inventory:addItem(player, InputItemName, InputAmountNumber, nil, nil)
                             VORPcore.NotifyTip(player,_U('YouGotAnItem') .. InputAmountNumber .. ' ' .. InputItemName .. _U('GivenFrom') .. Srcfirstname .. ' ' .. Srclastname,"right",10000)
+                            if Config.WebHook then
+                                VORPcore.AddWebhook(Config.WHTitle, Config.WHLink,Srcfirstname .. ' ' .. Srclastname .. ' Gave ' .. InputAmountNumber .. ' ' .. InputItemName .. ' To ' .. PlayerFirstname .. ' ' .. PlayerLastname, Config.WHColor, Config.WHName, Config.WHLogo, Config.WHFooterLogo, Config.WHAvatar)
+                            end
+                        end
+                    end
+                end
+            end
+        elseif CheckboxRemoveItem then
+            for _, player in ipairs(GetPlayers()) do
+                if #GetPlayers() ~= nil then
+                    local Character = VORPcore.getUser(player).getUsedCharacter
+                    local charidentifier = Character.charIdentifier
+                    local PlayerFirstname = Character.firstname
+                    local PlayerLastname = Character.lastname
+                    if charidentifier ~= nil then
+                        local HasItem = exports.vorp_inventory:getItemCount(player, nil, InputItemName,nil)
+                        if HasItem >= InputAmountNumber then
+                            exports.vorp_inventory:subItem(player, InputItemName, InputAmountNumber, nil, nil)
+                            VORPcore.NotifyTip(player,_U('YouGotAnItem') .. InputAmountNumber .. ' ' .. InputItemName .. _U('RemovedFrom') .. Srcfirstname .. ' ' .. Srclastname,"right",10000)
+                            if Config.WebHook then
+                                VORPcore.AddWebhook(Config.WHTitle, Config.WHLink,Srcfirstname .. ' ' .. Srclastname .. ' Removed ' .. InputAmountNumber .. ' ' .. InputItemName .. ' From ' .. PlayerFirstname .. ' ' .. PlayerLastname, Config.WHColor, Config.WHName, Config.WHLogo, Config.WHFooterLogo, Config.WHAvatar)
+                            end
                         end
                     end
                 end
@@ -69,11 +92,54 @@ RegisterServerEvent('mms-giveallplayers:client:GiveAllPlayersEvent',function(Che
         elseif CheckboxMoney then
             for _, player in ipairs(GetPlayers()) do
                 if #GetPlayers() ~= nil then
-                local Character = VORPcore.getUser(player).getUsedCharacter
-                local charidentifier = Character.charIdentifier
+                    local Character = VORPcore.getUser(player).getUsedCharacter
+                    local charidentifier = Character.charIdentifier
+                    local PlayerFirstname = Character.firstname
+                    local PlayerLastname = Character.lastname
                    if charidentifier ~= nil then
                         Character.addCurrency(0, InputAmountNumber)
                         VORPcore.NotifyTip(player,_U('YouGotAnItem') .. InputAmountNumber .. _U('DollaGivenFrom') .. Srcfirstname .. ' ' .. Srclastname,"right",10000)
+                        if Config.WebHook then
+                            VORPcore.AddWebhook(Config.WHTitle, Config.WHLink,Srcfirstname .. ' ' .. Srclastname .. ' Gave ' .. InputAmountNumber .. ' $ To ' .. PlayerFirstname .. ' ' .. PlayerLastname, Config.WHColor, Config.WHName, Config.WHLogo, Config.WHFooterLogo, Config.WHAvatar)
+                        end
+                    end
+                end
+            end
+        elseif CheckboxRemoveMoney then
+            for _, player in ipairs(GetPlayers()) do
+                if #GetPlayers() ~= nil then
+                    local Character = VORPcore.getUser(player).getUsedCharacter
+                    local charidentifier = Character.charIdentifier
+                    local PlayerFirstname = Character.firstname
+                    local PlayerLastname = Character.lastname
+                   if charidentifier ~= nil then
+                        local PlayerMoney = Character.money
+                        if PlayerMoney >= InputAmountNumber then
+                            Character.removeCurrency(0, InputAmountNumber)
+                            VORPcore.NotifyTip(player,_U('YouGotAnItem') .. InputAmountNumber .. _U('DollaRemovedFrom') .. Srcfirstname .. ' ' .. Srclastname,"right",10000)
+                            if Config.WebHook then
+                                VORPcore.AddWebhook(Config.WHTitle, Config.WHLink,Srcfirstname .. ' ' .. Srclastname .. ' Removed ' .. InputAmountNumber .. ' $ From ' .. PlayerFirstname .. ' ' .. PlayerLastname, Config.WHColor, Config.WHName, Config.WHLogo, Config.WHFooterLogo, Config.WHAvatar)
+                            end
+                        end
+                    end
+                end
+            end
+        elseif CheckboxWeapon then
+            for _, player in ipairs(GetPlayers()) do
+                if #GetPlayers() ~= nil then
+                    local Character = VORPcore.getUser(player).getUsedCharacter
+                    local charidentifier = Character.charIdentifier
+                    local PlayerFirstname = Character.firstname
+                    local PlayerLastname = Character.lastname
+                    if charidentifier ~= nil then
+                        local canCarryWeapons = exports.vorp_inventory:canCarryWeapons(player, 1, nil, InputWeapon)
+                        if canCarryWeapons then
+                            exports.vorp_inventory:createWeapon(player, InputWeapon, nil, nil, nil,nil,'00000-00000','Given by Admin','This Weapon was Given by Admin')
+                            VORPcore.NotifyTip(player,_U('YouGotAnWeapon') .. InputWeapon .. _U('GivenFrom') .. Srcfirstname .. ' ' .. Srclastname,"right",10000)
+                            if Config.WebHook then
+                                VORPcore.AddWebhook(Config.WHTitle, Config.WHLink,Srcfirstname .. ' ' .. Srclastname .. ' Gave ' .. InputWeapon .. ' To ' .. PlayerFirstname .. ' ' .. PlayerLastname, Config.WHColor, Config.WHName, Config.WHLogo, Config.WHFooterLogo, Config.WHAvatar)
+                            end
+                        end
                     end
                 end
             end
